@@ -78,7 +78,7 @@
 	let newsItems = ref([])
 	let scrollH = ref(0)
 
-	var QQMapWX = require('../../common/lib/qqmap-wx-jssdk.min.js')
+	var QQMapWX = require('../../static/qqmap-wx-jssdk.min.js')
 	let qqmapsdk = ''
 	let address = ref('')
 
