@@ -36,8 +36,23 @@
 			</view>
 		</scroll-view>
 		<swiper :style="'height:'+scrollH+'px'" :current="currentIndex" @change="changeIndex">
-			<swiper-item>
-				<view class="swiper-item"></view>
+			<swiper-item v-for="(news, index) in newsItems" :key="index">
+				<template v-if="news.list.length>0">
+					<view class="swiper-item">
+						<scroll-view scroll-y="true" :style="'height:'+scrollH+'px'">
+							<block v-for="(item, n) in news.list" :key="n">
+								<template v-if="item.type == 'swiper'">
+									<scroll-view scroll-y="true" :style="'height:' +scrollH+'px'">
+										<swiper-banner :swipers="item.data"></swiper-banner>
+									</scroll-view>
+								</template>
+							</block>
+						</scroll-view>
+					</view>
+				</template>
+				<template v-else>
+					<view>没有内容</view>
+				</template>
 			</swiper-item>
 		</swiper>
 	</view>
@@ -49,6 +64,7 @@
 		ref
 	} from 'vue';
 	import {
+		onLoad,
 		onNavigationBarButtonTap,
 		onNavigationBarSearchInputClicked
 	} from '@dcloudio/uni-app'
@@ -61,6 +77,11 @@
 	let navbars = ref([])
 	let newsItems = ref([])
 	let scrollH = ref(0)
+
+	var QQMapWX = require('../../common/lib/qqmap-wx-jssdk.min.js')
+	let qqmapsdk = ''
+	let address = ref('')
+
 	const goSearch = () => {
 		uni.navigateTo({
 			url: '/pages/search/search'
@@ -99,6 +120,11 @@
 			scrollinto.value = 'tab' + (e.detail.current - 5)
 		}
 	}
+	onLoad(() => {
+		qqmapsdk = new QQMapWX({
+			key: '56MBZ-SXH67-XMKXN-HJSGK-XQMHZ-FCBWA'
+		});
+	})
 	onMounted(() => {
 		gethome()
 		//获取系统信息
@@ -108,6 +134,16 @@
 				// console.log('uni.upx2px(176):', uni.upx2px(176));
 			}
 		})
+		uni.getLocation({
+			type: 'gcj02',
+			success: function(res) {
+				console.log('当前位置的经度：' + res.longitude);
+				console.log('当前位置的纬度：' + res.latitude);
+			},
+			fail: (err) => {
+				console.log('err', err);
+			}
+		});
 	})
 
 	onNavigationBarButtonTap((e) => {
