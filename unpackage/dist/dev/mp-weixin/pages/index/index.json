@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "web2525",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "search-solt": "../../components/search-solt/search-solt"
+  }
+}

@@ -1,0 +1,112 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "web2525",
+				"enablePullDownRefresh": false,
+				"app-plus": {
+					// #ifdef APP 
+					"titleNView": {
+						"buttons": [ //原生标题栏按钮配置,
+							{
+								"fontSrc": "/static/fonts/iconfont.ttf",
+								"fontSize": "26rpx",
+								"text": "\ue604", //原生标题栏增加分享按钮，点击事件可通过页面的 onNavigationBarButtonTap 函数进行监听
+								"float": "left"
+							},
+							{
+								"fontSrc": "/static/fonts/iconfont.ttf",
+								"fontSize": "26rpx",
+								"text": "\ue633", //原生标题栏增加分享按钮，点击事件可通过页面的 onNavigationBarButtonTap 函数进行监听
+								"float": "right"
+							}
+						],
+						"searchInput": {
+							"backgroundColor": "#f4f4f4",
+							"borderRadius": "6px", //输入框圆角
+							"placeholder": "请输入搜索内容",
+							"align": "left",
+							"disabled": true //disable时点击输入框不置焦，可以跳到新页面搜索
+						}
+
+					}
+					// #endif 
+				}
+			}
+		},
+		{
+			"path": "pages/cate/cate",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/cart/cart",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/myfile/myfile",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/search/search",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "components/search-solt/search-solt",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		}
+	],
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#f60",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"midButton": {
+			"iconPath": "/static/tabbar/middle.png",
+			"iconWidth": "50px",
+			"height": "70px"
+		},
+		"list": [{
+				"pagePath": "pages/index/index",
+				"iconPath": "static/tabbar/index.png",
+				"selectedIconPath": "static/tabbar/indexSelected.png",
+				"text": "首页"
+			}, {
+				"pagePath": "pages/cate/cate",
+				"iconPath": "static/tabbar/class.png",
+				"selectedIconPath": "static/tabbar/classSelected.png",
+				"text": "分类"
+			},
+			{
+				"pagePath": "pages/cart/cart",
+				"iconPath": "static/tabbar/cart.png",
+				"selectedIconPath": "static/tabbar/cartSelected.png",
+				"text": "购物车"
+			},
+			{
+				"pagePath": "pages/myfile/myfile",
+				"iconPath": "static/tabbar/my.png",
+				"selectedIconPath": "static/tabbar/mySelected.png",
+				"text": "我的"
+			}
+		]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"uniIdRouter": {}
+
+}

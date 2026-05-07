@@ -1,0 +1,17 @@
+
+	/* 给 swiper 设置高度 */
+.swiper-box {
+		width: 100%;
+		height: 150px;
+		/* 必须设置高度 */
+}
+
+	/* 给 swiper-item 里的内容加上背景和样式，方便看效果 */
+.swiper-item {
+		width: 100%;
+		height: 100%;
+		background-color: #eee;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+}
