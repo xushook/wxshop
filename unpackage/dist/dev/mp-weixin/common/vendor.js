@@ -405,8 +405,8 @@ const E = function() {
 E.prototype = {
   _id: 1,
   on: function(name, callback, ctx) {
-    var e = this.e || (this.e = {});
-    (e[name] || (e[name] = [])).push({
+    var e2 = this.e || (this.e = {});
+    (e2[name] || (e2[name] = [])).push({
       fn: callback,
       ctx,
       _id: this._id
@@ -433,8 +433,8 @@ E.prototype = {
     return this;
   },
   off: function(name, event) {
-    var e = this.e || (this.e = {});
-    var evts = e[name];
+    var e2 = this.e || (this.e = {});
+    var evts = e2[name];
     var liveEvents = [];
     if (evts && event) {
       for (var i = evts.length - 1; i >= 0; i--) {
@@ -445,7 +445,7 @@ E.prototype = {
       }
       liveEvents = evts;
     }
-    liveEvents.length ? e[name] = liveEvents : delete e[name];
+    liveEvents.length ? e2[name] = liveEvents : delete e2[name];
     return this;
   }
 };
@@ -1333,6 +1333,9 @@ function isReadonly(value) {
 }
 function isShallow(value) {
   return !!(value && value["__v_isShallow"]);
+}
+function isProxy(value) {
+  return isReactive(value) || isReadonly(value);
 }
 function toRaw(observed) {
   const raw = observed && observed["__v_raw"];
@@ -2569,6 +2572,15 @@ function inject(key, defaultValue, treatDefaultAsFactory = false) {
     warn$1(`inject() can only be used inside setup() or functional components.`);
   }
 }
+/*! #__NO_SIDE_EFFECTS__ */
+// @__NO_SIDE_EFFECTS__
+function defineComponent(options, extraOptions) {
+  return isFunction(options) ? (
+    // #8326: extend call and options.name access are considered side-effects
+    // by Rollup, so we have to wrap it in a pure-annotated IIFE.
+    /* @__PURE__ */ (() => extend({ name: options.name }, extraOptions, { setup: options }))()
+  ) : options;
+}
 const isKeepAlive = (vnode) => vnode.type.__isKeepAlive;
 function onActivated(hook, target) {
   registerKeepAliveHook(hook, "a", target);
@@ -3779,6 +3791,12 @@ const Comment = Symbol.for("v-cmt");
 const Static = Symbol.for("v-stc");
 function isVNode(value) {
   return value ? value.__v_isVNode === true : false;
+}
+const InternalObjectKey = `__vInternal`;
+function guardReactiveProps(props) {
+  if (!props)
+    return null;
+  return isProxy(props) || InternalObjectKey in props ? extend({}, props) : props;
 }
 const emptyAppContext = createAppContext();
 let uid = 0;
@@ -5020,6 +5038,11 @@ function initApp(app) {
   }
 }
 const propsCaches = /* @__PURE__ */ Object.create(null);
+function renderProps(props) {
+  const { uid: uid2, __counter } = getCurrentInstance();
+  const propsId = (propsCaches[uid2] || (propsCaches[uid2] = [])).push(guardReactiveProps(props)) - 1;
+  return uid2 + "," + propsId + "," + __counter;
+}
 function pruneComponentPropsCache(uid2) {
   delete propsCaches[uid2];
 }
@@ -5205,8 +5228,10 @@ function vFor(source, renderItem) {
 const o = (value, key) => vOn(value, key);
 const f = (source, renderItem) => vFor(source, renderItem);
 const s = (value) => stringifyStyle(value);
+const e = (target, ...sources) => extend(target, ...sources);
 const n = (value) => normalizeClass(value);
 const t = (val) => toDisplayString(val);
+const p = (props) => renderProps(props);
 function createApp$1(rootComponent, rootProps = null) {
   rootComponent && (rootComponent.mpType = "app");
   return createVueApp(rootComponent, rootProps).use(plugin);
@@ -5345,8 +5370,8 @@ function tryCatch(fn) {
   return function() {
     try {
       return fn.apply(fn, arguments);
-    } catch (e) {
-      console.error(e);
+    } catch (e2) {
+      console.error(e2);
     }
   };
 }
@@ -5810,7 +5835,7 @@ let enabled;
 function normalizePushMessage(message) {
   try {
     return JSON.parse(message);
-  } catch (e) {
+  } catch (e2) {
   }
   return message;
 }
@@ -6553,15 +6578,15 @@ function tryConnectSocket(host2, port, id) {
       });
       resolve2(null);
     }, SOCKET_TIMEOUT);
-    socket.onOpen((e) => {
+    socket.onOpen((e2) => {
       clearTimeout(timer);
       resolve2(socket);
     });
-    socket.onClose((e) => {
+    socket.onClose((e2) => {
       clearTimeout(timer);
       resolve2(null);
     });
-    socket.onError((e) => {
+    socket.onError((e2) => {
       clearTimeout(timer);
       resolve2(null);
     });
@@ -6662,7 +6687,7 @@ function formatMessage(type, args) {
       type,
       args: formatArgs(args)
     };
-  } catch (e) {
+  } catch (e2) {
   }
   return {
     type,
@@ -6690,7 +6715,7 @@ function formatArg(arg, depth = 0) {
     case "object":
       try {
         return formatObject(arg, depth);
-      } catch (e) {
+      } catch (e2) {
         return {
           type: "object",
           value: {
@@ -7030,9 +7055,9 @@ function isConsoleWritable() {
   return isWritable;
 }
 function initRuntimeSocketService() {
-  const hosts = "26.25.211.47,192.168.1.12,127.0.0.1";
+  const hosts = "26.25.211.47,192.168.1.9,127.0.0.1";
   const port = "8090";
-  const id = "mp-weixin_EDgWVO";
+  const id = "mp-weixin_6UR1du";
   const lazy = typeof swan !== "undefined";
   let restoreError = lazy ? () => {
   } : initOnError();
@@ -7981,6 +8006,11 @@ const createSubpackageApp = initCreateSubpackageApp();
 const createLifeCycleHook = (lifecycle, flag = 0) => (hook, target = getCurrentInstance()) => {
   !isInSSRComponentSetup && injectHook(lifecycle, hook, target);
 };
+const onLoad = /* @__PURE__ */ createLifeCycleHook(
+  ON_LOAD,
+  2
+  /* HookFlags.PAGE */
+);
 const onNavigationBarButtonTap = /* @__PURE__ */ createLifeCycleHook(
   ON_NAVIGATION_BAR_BUTTON_TAP,
   2
@@ -8140,7 +8170,7 @@ const adapter = (config) => {
           if (jsonParseHandle && typeof response.data === "string") {
             response.data = JSON.parse(response.data);
           }
-        } catch (e) {
+        } catch (e2) {
         }
         settle(resolve2, reject, response);
       }
@@ -8410,10 +8440,10 @@ var clone = function() {
             continue;
           }
           child[i] = _clone(parent2[i], depth2 - 1);
-        } catch (e) {
-          if (e instanceof TypeError) {
+        } catch (e2) {
+          if (e2 instanceof TypeError) {
             continue;
-          } else if (e instanceof ReferenceError) {
+          } else if (e2 instanceof ReferenceError) {
             continue;
           }
         }
@@ -8625,13 +8655,17 @@ class Request {
 exports.Request = Request;
 exports._export_sfc = _export_sfc;
 exports.createSSRApp = createSSRApp;
+exports.defineComponent = defineComponent;
+exports.e = e;
 exports.f = f;
 exports.index = index;
 exports.n = n;
 exports.o = o;
+exports.onLoad = onLoad;
 exports.onMounted = onMounted;
 exports.onNavigationBarButtonTap = onNavigationBarButtonTap;
 exports.onNavigationBarSearchInputClicked = onNavigationBarSearchInputClicked;
+exports.p = p;
 exports.ref = ref;
 exports.resolveComponent = resolveComponent;
 exports.s = s;

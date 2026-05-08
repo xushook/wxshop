@@ -64,6 +64,12 @@
 			"style": {
 				"navigationBarTitleText": ""
 			}
+		},
+		{
+			"path": "components/swiper-banner/swiper-banner",
+			"style": {
+				"navigationBarTitleText": ""
+			}
 		}
 	],
 	"tabBar": {

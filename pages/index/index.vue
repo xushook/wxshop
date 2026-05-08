@@ -27,6 +27,9 @@
 			</template>
 		</search-solt>
 		<!-- #endif -->
+		<view class="a-address">
+			{{address}}
+		</view>
 		<scroll-view scroll-x="true" :scroll-into-view="scrollinto" scroll-with-animation>
 			<view class="d-flex flex-nowrap tabs-title">
 				<view class="flex-shrink mx-2" v-for="(item,i) in navbars" :key="i" :class="currentIndex==i?'active':''"
@@ -36,8 +39,23 @@
 			</view>
 		</scroll-view>
 		<swiper :style="'height:'+scrollH+'px'" :current="currentIndex" @change="changeIndex">
-			<swiper-item>
-				<view class="swiper-item"></view>
+			<swiper-item v-for="(news, index) in newsItems" :key="index">
+				<template v-if="news.list.length>0">
+					<view class="swiper-item">
+						<scroll-view scroll-y="true" :style="'height:'+scrollH+'px'">
+							<block v-for="(item, n) in news.list" :key="n">
+								<template v-if="item.type == 'swiper'">
+									<scroll-view scroll-y="true" :style="'height:' +scrollH+'px'">
+										<swiper-banner :swipers="item.data"></swiper-banner>
+									</scroll-view>
+								</template>
+							</block>
+						</scroll-view>
+					</view>
+				</template>
+				<template v-else>
+					<view>没有内容</view>
+				</template>
 			</swiper-item>
 		</swiper>
 	</view>
@@ -49,18 +67,24 @@
 		ref
 	} from 'vue';
 	import {
+		onLoad,
 		onNavigationBarButtonTap,
 		onNavigationBarSearchInputClicked
 	} from '@dcloudio/uni-app'
-	// let title = ref('Hello')
 	import {
 		getHome
 	} from '../../api/index.js'
+
 	let currentIndex = ref(0)
 	let scrollinto = ref('')
-	let navbars = ref([])
-	let newsItems = ref([])
+	let navbars = ref([]) //navbars是顶部导航
+	let newsItems = ref([]) //newsItems是每个导航内部的每个数据
 	let scrollH = ref(0)
+	//定位相关配置
+	var QQMapWX = require('../../static/qqmap-wx-jssdk.min.js')
+	let qqmapsdk = ''
+	let address = ref('')
+
 	const goSearch = () => {
 		uni.navigateTo({
 			url: '/pages/search/search'
@@ -69,7 +93,7 @@
 	const gethome = () => {
 		getHome().then(res => {
 			console.log('res=>', res);
-			navbars.value = res.data.category
+			navbars.value = res.data.category //navbars是顶部导航
 			for (var i = 0; i < navbars.value.length; i++) {
 				let obj = {
 					list: []
@@ -77,8 +101,8 @@
 				if (i == 0) {
 					obj.list = res.data.data
 				}
-				newsItems.value.push(obj)
-				console.log('newsItems.value:', newsItems.value);
+				newsItems.value.push(obj) //newsItems是每个导航内部的每个数据
+				// console.log('newsItems.value:', newsItems.value);
 			}
 		})
 	}
@@ -99,15 +123,42 @@
 			scrollinto.value = 'tab' + (e.detail.current - 5)
 		}
 	}
+	onLoad(() => {
+		qqmapsdk = new QQMapWX({
+			key: '56MBZ-SXH67-XMKXN-HJSGK-XQMHZ-FCBWA' //腾讯定位的key值
+		});
+	})
 	onMounted(() => {
 		gethome()
-		//获取系统信息
+		//获取系统信息 - 手机的竖向剩余长度
 		uni.getSystemInfo({
 			success: (res) => {
 				scrollH.value = (res.windowHeight - uni.upx2px(176))
 				// console.log('uni.upx2px(176):', uni.upx2px(176));
 			}
 		})
+		//定位
+		uni.getLocation({
+			type: 'gcj02',
+			success: function(res) {
+				// console.log('当前位置的经度：' + res.longitude);
+				// console.log('当前位置的纬度：' + res.latitude);
+				qqmapsdk.reverseGeocoder({
+					location: {
+						latitude: res.latitude,
+						longitude: res.longitude
+					},
+					success: res2 => {
+						// console.log('res2', res2)
+						address.value = res2.result.address
+					},
+					fail: error => console.log('error', error)
+				})
+			},
+			fail: (err) => {
+				console.log('err', err);
+			}
+		});
 	})
 
 	onNavigationBarButtonTap((e) => {
@@ -156,4 +207,10 @@
 	// 	width: 100%;
 	// 	display: block;
 	// }
+	.a-address {
+		width: 100%;
+		height: 88rpx;
+		line-height: 88rpx;
+		background-color: rgba(255, 0, 0, 0.1);
+	}
 </style>

@@ -8,6 +8,7 @@ if (!Math) {
   "./pages/myfile/myfile.js";
   "./pages/search/search.js";
   "./components/search-solt/search-solt.js";
+  "./components/swiper-banner/swiper-banner.js";
 }
 const _sfc_main = {
   onLaunch: function() {

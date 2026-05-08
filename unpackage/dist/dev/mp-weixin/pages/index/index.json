@@ -2,6 +2,7 @@
   "navigationBarTitleText": "web2525",
   "enablePullDownRefresh": false,
   "usingComponents": {
-    "search-solt": "../../components/search-solt/search-solt"
+    "search-solt": "../../components/search-solt/search-solt",
+    "swiper-banner": "../../components/swiper-banner/swiper-banner"
   }
 }

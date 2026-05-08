@@ -5,7 +5,8 @@
     "pages/cart/cart",
     "pages/myfile/myfile",
     "pages/search/search",
-    "components/search-solt/search-solt"
+    "components/search-solt/search-solt",
+    "components/swiper-banner/swiper-banner"
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -45,5 +46,14 @@
       }
     ]
   },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于小程序位置接口的效果展示"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation",
+    "chooseAddress"
+  ],
   "usingComponents": {}
 }

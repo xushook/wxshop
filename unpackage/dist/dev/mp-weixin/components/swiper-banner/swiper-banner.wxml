@@ -1,0 +1,1 @@
+<view><swiper style="height:400rpx" indicator-dots="{{true}}" autoplay="{{true}}" interval="{{3000}}" duration="{{1000}}"><swiper-item wx:for="{{a}}" wx:for-item="swiper" wx:key="b"><view class="swiper-item"><image src="{{swiper.a}}" mode="heightFix"></image></view></swiper-item></swiper></view>
