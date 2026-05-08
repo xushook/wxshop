@@ -15,7 +15,7 @@
 			</template>
 			<template #rightbar>
 				<!-- #ifdef MP -->
-				<view class="right-bar text-center">
+				<view class="right-bar text-center" @click="getCode">
 					<view class="iconfont icon-saoma"></view>
 				</view>
 				<!-- #endif -->
@@ -49,6 +49,9 @@
 										<swiper-banner :swipers="item.data"></swiper-banner>
 									</scroll-view>
 								</template>
+								<template v-if="item.type=='indexnavs'">
+									<fast-nav :pagges="pagges"></fast-nav>
+								</template>
 							</block>
 						</scroll-view>
 					</view>
@@ -63,6 +66,7 @@
 
 <script setup>
 	import {
+		computed,
 		onMounted,
 		ref
 	} from 'vue';
@@ -75,7 +79,7 @@
 		getHome
 	} from '../../api/index.js'
 
-	let currentIndex = ref(0)
+	let currentIndex = ref(0) //
 	let scrollinto = ref('')
 	let navbars = ref([]) //navbars是顶部导航
 	let newsItems = ref([]) //newsItems是每个导航内部的每个数据
@@ -123,6 +127,30 @@
 			scrollinto.value = 'tab' + (e.detail.current - 5)
 		}
 	}
+	//金刚区- 快速导航的计算属性
+	const pagges = computed(() => {
+		let pagge = []
+		let index = currentIndex.value
+		if (newsItems.value[index].list) {
+			console.log('newsItems.value[index].list', newsItems.value[index].list);
+			let obj = newsItems.value[index].list
+			obj.forEach(v => {
+				if (v.type == 'indexnavs') {
+					let indexnav = Object.values(v.data)
+					console.log('indexnav', indexnav);
+					indexnav.forEach((item, index) => {
+						let page = Math.floor(index / 8)
+						if (!pagge[page]) {
+							pagge[page] = []
+						}
+						pagge[page].push(item)
+					})
+				}
+			})
+		}
+		console.log('pagge', pagge);
+		return pagge
+	})
 	onLoad(() => {
 		qqmapsdk = new QQMapWX({
 			key: '56MBZ-SXH67-XMKXN-HJSGK-XQMHZ-FCBWA' //腾讯定位的key值
@@ -174,6 +202,15 @@
 			url: '/pages/search/search'
 		})
 	})
+	//手机扫码
+	const getCode = () => {
+		uni.scanCode({
+			success: function(res) {
+				console.log('条码类型:' + res.scanType)
+				console.log('条码内容:' + res.result)
+			}
+		})
+	}
 </script>
 
 <style lang="less">
@@ -211,6 +248,6 @@
 		width: 100%;
 		height: 88rpx;
 		line-height: 88rpx;
-		background-color: rgba(255, 0, 0, 0.1);
+		// background-color: rgba(255, 0, 0, 0.1);
 	}
 </style>
