@@ -6,3 +6,9 @@ export function getHome() {
 		data: {}
 	})
 }
+export function getPage(id, page) {
+	return request({
+		url: `/index_category/${id}/data/${page}`,
+		method: 'GET',
+	})
+}

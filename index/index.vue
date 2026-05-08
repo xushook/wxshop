@@ -50,12 +50,21 @@
 								<template v-if="item.type=='indexnavs'">
 									<fast-nav :pagges="pagges"></fast-nav>
 								</template>
+								<template v-else-if="item.type=='threeAdv'">
+									<three-adv :news="item.data"></three-adv>
+								</template>
+								<template v-else-if="item.type=='oneAdv'">
+									<one-adv :title="item.data.title" :cover="item.data.cover"></one-adv>
+								</template>
+								<template v-else-if="item.type=='list'">
+									<common-list :news="item.data"></common-list>
+								</template>
 							</block>
 						</scroll-view>
 					</view>
 				</template>
 				<template v-else>
-					<view>没有内容</view>
+					<view class="text-center text-muted my-2">暂无数据</view>
 				</template>
 			</swiper-item>
 		</swiper>
@@ -74,10 +83,11 @@
 		onNavigationBarSearchInputClicked
 	} from '@dcloudio/uni-app'
 	import {
-		getHome
+		getHome,
+		getPage
 	} from '../../api/index.js'
 
-	let currentIndex = ref(0) //
+	let currentIndex = ref(0) //顶部导航的索引
 	let scrollinto = ref('')
 	let navbars = ref([]) //navbars是顶部导航
 	let newsItems = ref([]) //newsItems是每个导航内部的每个数据
@@ -107,6 +117,11 @@
 				// console.log('newsItems.value:', newsItems.value);
 			}
 		})
+	}
+	const getpage = (callback) => {
+		let id = navbars.value[currentIndex.value].id
+		let obj = newsItems.value[currentIndex.value]
+		let page = Math.ceil(obj.list.length / 5) + 1
 	}
 	const changeTabs = (index) => {
 		currentIndex.value = index

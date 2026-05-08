@@ -12,7 +12,7 @@
 
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 	.nav-bar {
 		width: 100%;
 		height: 88rpx;
