@@ -45,9 +45,7 @@
 						<scroll-view scroll-y="true" :style="'height:'+scrollH+'px'">
 							<block v-for="(item, n) in news.list" :key="n">
 								<template v-if="item.type == 'swiper'">
-									<scroll-view scroll-y="true" :style="'height:' +scrollH+'px'">
-										<swiper-banner :swipers="item.data"></swiper-banner>
-									</scroll-view>
+									<swiper-banner :swipers="item.data"></swiper-banner>
 								</template>
 								<template v-if="item.type=='indexnavs'">
 									<fast-nav :pagges="pagges"></fast-nav>
@@ -161,8 +159,8 @@
 		//获取系统信息 - 手机的竖向剩余长度
 		uni.getSystemInfo({
 			success: (res) => {
-				scrollH.value = (res.windowHeight - uni.upx2px(176))
-				// console.log('uni.upx2px(176):', uni.upx2px(176));
+				scrollH.value = (res.windowHeight - uni.upx2px(264))
+				// console.log('uni.upx2px(264):', uni.upx2px(264));
 			}
 		})
 		//定位
