@@ -3,14 +3,17 @@
 		<uni-easyinput prefixIcon="search" v-model="keyval" placeholder="请输入内容" @iconClick="searchClick"
 			@change="changeCon"></uni-easyinput>
 		<one-adv title="热门搜索" cover="../../static/images/demo4.jpg">
-			<color-tag v-for="(item,index) in hot" :key="index" :item="item" :color="true"></color-tag>
+			<color-tag v-for="(item,index) in hot" :key="index" :item="item" :color="true"
+				@click="btnItem(item)"></color-tag>
 		</one-adv>
 		<one-adv title="常用分类">
-			<color-tag v-for="(item,index) in cate" :key="index" :item="item" :color="false"></color-tag>
+			<color-tag v-for="(item,index) in cate" :key="index" :item="item" :color="false"
+				@click="btnItem(item)"></color-tag>
 		</one-adv>
 		<one-adv title="历史记录" cover="../../static/images/del.png" :bool="true" @setChange="getChange"
 			@completeIconAll="completeAll" @delIconAll="delAll">
-			<color-tag v-for="(item,index) in history" :key="index" :item="{name:item}" :color="false">
+			<color-tag v-for="(item,index) in history" :key="index" :item="{name:item}" :color="false"
+				@click="btnItem(item)">
 				<icon type="clear" size="16" class="position-absolute icon-img" v-show="isShow"></icon>
 			</color-tag>
 		</one-adv>
@@ -24,6 +27,9 @@
 		toRefs,
 		onMounted
 	} from 'vue'
+	import {
+		onShow
+	} from '@dcloudio/uni-app'
 	let keyval = ref();
 	let hot = ref([{
 			name: '领券中心'
@@ -71,9 +77,7 @@
 	])
 	let history = ref([]);
 	let isShow = ref(false)
-	import {
-		onShow
-	} from '@dcloudio/uni-app'
+
 	//点击搜索
 	const searchClick = () => {
 		console.log('icon');
@@ -86,6 +90,9 @@
 			history.value.unshift(keyval.value)
 			uni.setStorageSync('history_key', history.value)
 		}
+		uni.navigateTo({
+			url: '/pages/choose/choose'
+		})
 	}
 	//仅在输入框失去焦点或用户按下回车时触发
 	const changeCon = () => {
@@ -133,6 +140,13 @@
 			history.value = historyval
 		}
 	})
+	const btnItem = (item) => {
+		if (item?.name) {
+			keyval.value = item.name
+		} else {
+			keyval.value = item
+		}
+	}
 </script>
 
 <style lang="less">
