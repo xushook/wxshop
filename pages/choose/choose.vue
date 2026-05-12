@@ -140,14 +140,14 @@
 		let oldItem = screen.value.list[oldIndex]	//获取旧索引对应的属性
 		if (index == oldIndex) {	//如果点击的索引与旧索引相同
 			oldItem.status = oldItem.status == 1 ? 2 : 1	//判断小索引是否为1，是则变成2，否则为1（以达到点击来回切换的效果）
-			getchoose()	//切换后请求数据
+			getchoose(true)	//切换后请求数据 ; 传入true,覆盖列表
 			return
 		} else {
 			let newItem = screen.value.list[index]	//获取新的索引对应的属性
 			newItem.status = 1	//该属性的小索引变为1
 			oldItem.status = 0	//旧属性的小索引变为0
 			screen.value.currentIndex = index	//将整个screen的索引变为目前的新索引
-			getchoose()	//切换后请求数据
+			getchoose(true)	//切换后请求数据
 			return
 		}
 	}
@@ -160,7 +160,7 @@
 	}
 	const changeTag = (index : number) => { //改变抽屉内的索引
 		label.value.selected = index
-		getchoose()	//切换后请求数据
+		getchoose(true)	//切换后请求数据
 		return
 	}
 	const options = computed(() => {	//用计算属性实现 动态key值
@@ -188,7 +188,11 @@
 	onMounted(() => {
 		getchoose()
 	})
-	const getchoose = (refresh, callback) => {
+	const getchoose = (refresh = false, callback = null) => {
+		// 关键修改 1：如果是切换条件或下拉刷新，必须把页码重置为 1
+		if (refresh) {
+			page.value = 1
+		}
 		let pages = refresh ? 1 : page.value
 		getChoose({
 			title: title.value,
@@ -208,6 +212,7 @@
 	}
 
 	const formatter = (res) => {	//格式化数据，将res请求的数据的属性名更换成统一封装的属性名
+		if (!res) return []
 		return res.map(v => {
 			let satisfaction = (v.comments_good_count / v.comments_count) * 100
 			return {
@@ -220,6 +225,7 @@
 			}
 		})
 	}
+
 	//监听下拉刷新
 	onPullDownRefresh(() => {
 		getchoose(true, () => {
