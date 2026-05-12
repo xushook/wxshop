@@ -60,33 +60,10 @@
 			}
 		},
 		{
-			"path": "components/three-adv/three-adv",
+			"path": "pages/choose/choose",
 			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
-			"path": "components/one-adv/one-adv",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
-			"path": "components/common-list/common-list",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
-			"path": "components/p-price/p-price",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
-			"path": "components/color-tag/color-tag",
-			"style": {
-				"navigationBarTitleText": ""
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": true
 			}
 		}
 	],

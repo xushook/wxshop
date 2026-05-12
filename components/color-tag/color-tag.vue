@@ -1,13 +1,15 @@
 <template>
 	<view class="d-inline-block position-relative">
-		<button size="mini" class="my-1 mx-1" :style="getStyle">{{item.name}}</button>
+		<button size="mini" class="my-1 mx-1" :style="getStyle" @click="pushClick"
+			:class="bool?'main-bg-color':''">{{item.name}}</button>
 		<slot></slot>
 	</view>
 </template>
 
 <script setup lang="ts">
 	import { computed } from 'vue'
-	let props = defineProps(['item', 'color'])
+	let props = defineProps(['item', 'color', 'bool'])
+	let emit = defineEmits(['click'])
 	const getStyle = computed(() => {
 		if (props.color) {
 			let borderColor = ['#EEA6AA', '#DD6A4B', '#98D5D8', '#9DBE93', '#BCCD99'];
@@ -20,6 +22,9 @@
 			return `background:#fff`
 		}
 	})
+	const pushClick = () => {
+		emit('click')
+	}
 </script>
 
 <style lang="less" scoped>

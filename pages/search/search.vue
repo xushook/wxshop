@@ -91,7 +91,7 @@
 			uni.setStorageSync('history_key', history.value)
 		}
 		uni.navigateTo({
-			url: '/pages/choose/choose'
+			url: `/pages/choose/choose?key=${keyval.value}`
 		})
 	}
 	//仅在输入框失去焦点或用户按下回车时触发
