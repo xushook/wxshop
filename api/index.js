@@ -33,3 +33,9 @@ export function getChoose({
 		}
 	})
 }
+export function getCate() {
+	return request({
+		url: `/category/app_category`,
+		method: 'GET',
+	})
+}
