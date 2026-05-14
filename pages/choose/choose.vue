@@ -104,17 +104,17 @@
 			id: 2,
 			name: '100-200',
 			rule: 'between',
-			value: '100-200'
+			value: '100,200'
 		}, {
 			id: 3,
 			name: '200-300',
 			rule: 'between',
-			value: '200-300'
+			value: '200,300'
 		}, {
 			id: 4,
 			name: '200-400',
 			rule: 'between',
-			value: '300-400'
+			value: '300,400'
 		}, {
 			id: 5,
 			name: '400以上',
@@ -166,7 +166,7 @@
 	const options = computed(() => {	//用计算属性实现 动态key值
 		let obj = screen.value.list[screen.value.currentIndex]	//获取到目前选中的tab栏
 		let value = obj.status == 1 ? 'asc' : 'desc'
-		console.log('options', options);
+		// console.log('options', value);
 		return {
 			[obj.key]: value
 		}
@@ -212,7 +212,6 @@
 	}
 
 	const formatter = (res) => {	//格式化数据，将res请求的数据的属性名更换成统一封装的属性名
-		if (!res) return []
 		return res.map(v => {
 			let satisfaction = (v.comments_good_count / v.comments_count) * 100
 			return {
